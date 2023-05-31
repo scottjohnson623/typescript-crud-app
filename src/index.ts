@@ -23,6 +23,6 @@ try {
   app.listen(PORT, (): void => {
     console.log(`Connected successfully on port ${PORT}`);
   });
-} catch (error: any) {
+} catch (error) {
   console.error(`Error occurred: ${error.message}`);
 }
