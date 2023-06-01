@@ -1,12 +1,38 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
+import config from 'config';
 import { AppDataSource } from './utils/data-source';
-const app: Application = express();
-const PORT = 3000;
+import dotenv from 'dotenv';
+import validateEnv from './utils/validateEnv';
+import cookieParser from 'cookie-parser';
+import AppError from './utils/appError';
 
-AppDataSource.initialize().then(() => {
+dotenv.config();
+
+AppDataSource.initialize().then(async () => {
+  validateEnv();
+
+  const app: Application = express();
+
+  app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  // UNHANDLED ROUTE
+  app.all('*', (req: Request, res: Response, next: NextFunction) => {
+    next(new AppError(404, `Route ${req.originalUrl} not found`));
+  });
+
+  // GLOBAL ERROR HANDLER
+  app.use((error: AppError, req: Request, res: Response) => {
+    error.status = error.status || 'error';
+    error.statusCode = error.statusCode || 500;
+
+    res.status(error.statusCode).json({
+      status: error.status,
+      message: error.message,
+    });
+  });
 
   app.get('/', async (req: Request, res: Response): Promise<Response> => {
     return res.status(200).send({
@@ -21,9 +47,11 @@ AppDataSource.initialize().then(() => {
     });
   });
 
+  const port = config.get<number>('port');
+
   try {
-    app.listen(PORT, (): void => {
-      console.log(`Connected successfully on port ${PORT}`);
+    app.listen(port, (): void => {
+      console.log(`Connected successfully on port ${port}`);
     });
   } catch (error) {
     console.error(`Error occurred: ${error.message}`);
