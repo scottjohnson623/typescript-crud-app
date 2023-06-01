@@ -7,8 +7,7 @@
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
-    "format": "eslint src/**/*.ts --fix",
-    "pretty": "prettier --write \"src/**/*.ts\"",
+    "lintfix": "eslint src/**/*.ts --fix && prettier --write \"src/**/*.ts\"",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "husky": {

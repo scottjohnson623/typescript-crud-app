@@ -7,7 +7,6 @@ import validateEnv from './utils/validateEnv';
 import cookieParser from 'cookie-parser';
 import AppError from './utils/appError';
 
-
 AppDataSource.initialize().then(async () => {
   validateEnv();
 
