@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { CreateUserInput } from '../schemas/user.schema';
 import { createUser } from '../services/user.service';
-import { RequestWithUser } from '../interfaces/requests/user';
+import { RequestWithUser } from '../types/requests/user';
 
 export const createUserHandler = async (
   req: Request<CreateUserInput>,
