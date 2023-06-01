@@ -1,11 +1,7 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import config from 'config';
 
-export const signJwt = (
-  payload: Record<string, unknown>,
-  keyName: 'accessTokenPrivateKey' | 'refreshTokenPrivateKey',
-  options: SignOptions,
-) => {
+export const signJwt = (payload: Record<string, unknown>, keyName: 'accessTokenPrivateKey', options: SignOptions) => {
   const privateKey = Buffer.from(config.get<string>(keyName), 'base64').toString('ascii');
   return jwt.sign(payload, privateKey, {
     ...(options && options),
@@ -13,7 +9,7 @@ export const signJwt = (
   });
 };
 
-export const verifyJwt = <T>(token: string, keyName: 'accessTokenPublicKey' | 'refreshTokenPublicKey'): T | null => {
+export const verifyJwt = <T>(token: string, keyName: 'accessTokenPublicKey'): T | null => {
   try {
     const publicKey = Buffer.from(config.get<string>(keyName), 'base64').toString('ascii');
     const decoded = jwt.verify(token, publicKey) as T;

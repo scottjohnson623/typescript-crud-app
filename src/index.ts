@@ -6,8 +6,8 @@ import config from 'config';
 import { AppDataSource } from './utils/data-source';
 import validateEnv from './utils/validateEnv';
 import cookieParser from 'cookie-parser';
-import AppError from './utils/appError';
-import apiRouter from './routes/api/api.routes'
+import apiRouter from './routes/api/api.routes';
+import authRouter from './routes/auth.routes';
 
 AppDataSource.initialize().then(async () => {
   validateEnv();
@@ -24,21 +24,11 @@ AppDataSource.initialize().then(async () => {
     });
   });
 
+  app.use('/auth', authRouter);
   app.use('/api', apiRouter);
-  
+
   app.all('*', (req: Request, res: Response) => {
     res.status(404).send(`Route ${req.originalUrl} not found`);
-  });
-
-  // GLOBAL ERROR HANDLER
-  app.use((error: AppError, req: Request, res: Response) => {
-    error.status = error.status || 'error';
-    error.statusCode = error.statusCode || 500;
-
-    res.status(error.statusCode).json({
-      status: error.status,
-      message: error.message,
-    });
   });
 
   const port = config.get<number>('port');
