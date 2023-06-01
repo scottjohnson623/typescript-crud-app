@@ -8,7 +8,7 @@
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "lintfix": "eslint src/**/*.ts --fix && prettier --write \"src/**/*.ts\"",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "migrate": "typeorm-ts-node-commonjs migration:run -d ./src/utils/data-source.ts"
   },
   "husky": {
     "hooks": {
@@ -26,6 +26,7 @@
     "dotenv": "^16.0.0",
     "envalid": "^7.3.1",
     "express": "^4.18.1",
+    "express-jwt": "^8.4.1",
     "html-to-text": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.11.0",
@@ -44,7 +45,7 @@
     "@types/lodash": "^4.14.182",
     "@types/morgan": "^1.9.3",
     "@types/multer": "^1.4.7",
-    "@types/node": "^16.11.10",
+    "@types/node": "^16.18.34",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "eslint": "^8.10.0",

@@ -11,6 +11,6 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "outDir": "./build",
-    "rootDir": "."
+    "rootDir": ".",
   }
 }

@@ -1,11 +1,13 @@
 require('dotenv').config();
-import express, { Application, Request, Response, NextFunction } from 'express';
+
+import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import config from 'config';
 import { AppDataSource } from './utils/data-source';
 import validateEnv from './utils/validateEnv';
 import cookieParser from 'cookie-parser';
 import AppError from './utils/appError';
+import apiRouter from './routes/api/api.routes'
 
 AppDataSource.initialize().then(async () => {
   validateEnv();
@@ -22,16 +24,10 @@ AppDataSource.initialize().then(async () => {
     });
   });
 
-  app.post('/post', async (req: Request, res: Response): Promise<Response> => {
-    console.log(req.body);
-    return res.status(200).send({
-      message: 'Hello World from post!',
-    });
-  });
-
-  // UNHANDLED ROUTE
-  app.all('*', (req: Request, res: Response, next: NextFunction) => {
-    next(new AppError(404, `Route ${req.originalUrl} not found`));
+  app.use('/api', apiRouter);
+  
+  app.all('*', (req: Request, res: Response) => {
+    res.status(404).send(`Route ${req.originalUrl} not found`);
   });
 
   // GLOBAL ERROR HANDLER
@@ -51,7 +47,7 @@ AppDataSource.initialize().then(async () => {
     app.listen(port, (): void => {
       console.log(`Connected successfully on port ${port}`);
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error occurred: ${error.message}`);
   }
 });
