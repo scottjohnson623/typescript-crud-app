@@ -1,9 +1,7 @@
-import dotenv from 'dotenv';
+require('dotenv').config();
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import config from 'config';
-
-dotenv.config();
 
 const postgresConfig = config.get<{
   host: string;

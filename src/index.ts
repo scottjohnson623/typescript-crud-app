@@ -1,13 +1,12 @@
+require('dotenv').config();
 import express, { Application, Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import config from 'config';
 import { AppDataSource } from './utils/data-source';
-import dotenv from 'dotenv';
 import validateEnv from './utils/validateEnv';
 import cookieParser from 'cookie-parser';
 import AppError from './utils/appError';
 
-dotenv.config();
 
 AppDataSource.initialize().then(async () => {
   validateEnv();
@@ -17,6 +16,19 @@ AppDataSource.initialize().then(async () => {
   app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.get('/', async (req: Request, res: Response): Promise<Response> => {
+    return res.status(200).send({
+      message: 'Hello World!',
+    });
+  });
+
+  app.post('/post', async (req: Request, res: Response): Promise<Response> => {
+    console.log(req.body);
+    return res.status(200).send({
+      message: 'Hello World from post!',
+    });
+  });
 
   // UNHANDLED ROUTE
   app.all('*', (req: Request, res: Response, next: NextFunction) => {
@@ -31,19 +43,6 @@ AppDataSource.initialize().then(async () => {
     res.status(error.statusCode).json({
       status: error.status,
       message: error.message,
-    });
-  });
-
-  app.get('/', async (req: Request, res: Response): Promise<Response> => {
-    return res.status(200).send({
-      message: 'Hello World!',
-    });
-  });
-
-  app.post('/post', async (req: Request, res: Response): Promise<Response> => {
-    console.log(req.body);
-    return res.status(200).send({
-      message: 'Hello World from post!',
     });
   });
 
