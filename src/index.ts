@@ -8,6 +8,8 @@ import validateEnv from './utils/validateEnv';
 import cookieParser from 'cookie-parser';
 import apiRouter from './routes/api/api.routes';
 import authRouter from './routes/auth.routes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../swagger.json'
 
 AppDataSource.initialize().then(async () => {
   validateEnv();
@@ -23,7 +25,9 @@ AppDataSource.initialize().then(async () => {
       message: 'Hello World!',
     });
   });
-
+  if (process.env.NODE_ENV === 'development') {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  }
   app.use('/auth', authRouter);
   app.use('/api', apiRouter);
 

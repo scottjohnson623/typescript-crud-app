@@ -1,120 +1,66 @@
-## Description of the project
+# Description of the project
 
-Today we will integrate Typescript with our NodeJS boilerplate. If you are interested on how to setup Typescript with NodeJS then you can refer to the following articles
+This is a sample project using node.js and express.js to have a simple CRUD backend for modifying resources.
 
-https://www.mohammadfaisal.dev/blog/create-nodejs-typescript-boilerplate
+# Getting started
 
-### Get the NodeJS boilerplate
-
-Let's first clone the [boilerplate repository](https://github.com/Mohammad-Faisal/nodejs-typescript-skeleton) where we have a working NodeJS application with Typescript, EsLint and Prettier already set up.
-We will integrate Express on top of this
-
-```sh
-git clone https://github.com/Mohammad-Faisal/nodejs-typescript-skeleton.git
-```
-
-### Install the dependencies
+## Setup the Server
 
 Then go inside the project and install the dependencies
 
 ```sh
-cd nodejs-typescript-skeleton
-yarn add express
+cd typescript-crud-app
+npm install
 ```
 
-And also the type definitions for the express module
+Next, rename the `.env.example` file to `.env`.
 
-```sh
-yarn add -D @types/express
+Then, generate a new public and private key to update `JWT_ACCESS_TOKEN_PRIVATE_KEY` and `JWT_ACCESS_TOKEN_PUBLIC_KEY` ( You can do so at https://cryptotools.net/rsagen)
+
+If you have a postgres database instance already: 
+
+Update the .env variables to match the configuration of your postgres database
+
+If you don't:
+
+Install docker (if you haven't) and start the postgres database with `docker-compose up`, then run the necesssary database migrations with `npm run migrate`
+
+Finally, start the server with `npm run dev`
+
+You should see a message similar to 
+```
+Connected successfully on port 8000
 ```
 
-### Test it out!
-
-Go inside the `src/index.ts` file and import the dependencies and create a basic express application
-
-```js
-import express, { Application, Request, Response } from 'express';
-
-const app: Application = express();
+If you now visit the server on localhost, (http://localhost:8000 with the port listed above), you should be greeted with a simple 
 ```
-
-Then let's create a basic route that will except a GET request and return a result
-
-```js
-app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return res.status(200).send({
-    message: 'Hello World!',
-  });
-});
-```
-
-Then start the server on port 3000;
-
-```js
-const PORT = 3000;
-
-try {
-  app.listen(PORT, (): void => {
-    console.log(`Connected successfully on port ${PORT}`);
-  });
-} catch (error: any) {
-  console.error(`Error occured: ${error.message}`);
+{
+"message": "Hello World!"
 }
 ```
+## Test the API
+Full API docs are created using swagger, and if your `NODE_ENV` environment variable is set to `development`, are available at the  `/api-docs` endpoint (http://localhost:8000/api-docs for the default port assignment)
 
-And then run the application
-
-```sh
-yarn dev
+1. First, you will want to create a user so that you can login to obtain an access token at `/auth/register`. If successful, you should get a response similar to  
 ```
-
-Go ahead and hit the following URL `http://localhost:3000/` and you should be greeted with the following response
-
-```json
-{ "message": "Hello World!" }
+{
+    "status": "success",
+    "data": {
+        "user": {
+            "name": "Scott Johnson",
+            "email": "test@gmail.com",
+            "id": "85f679b6-a62f-4144-831b-1335c7d8ac1c",
+            "created_at": "2023-06-04T04:28:52.301Z",
+            "updated_at": "2023-06-04T04:28:52.301Z"
+        }
+    }
+}
+``` 
+2. Next, send a request to `/auth/login` using the newly registered user's email and password. You should get a response with a success message and an access token to consume the API with like
 ```
-
-### Add Bodyparser
-
-Now this is the bare minimum to get started with Express. But in real life we need a couple of things to get the server working properly.
-
-to handle HTTP POST requests in express we need to install a middleware module [**body-parser**](https://www.npmjs.com/package/body-parser)
-
-Let's install it first
-
-```sh
-yarn add body-parser
-yarn add -D @types/body-parser
+{
+    "status": "success",
+    "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWY2NzliNi1hNjJmLTQxNDQtODMxYi0xMzM1YzdkOGFjMWMiLCJpYXQiOjE2ODU4ODU0MDMsImV4cCI6MTY4NTg4OTAwM30.YdgoaCkKNPMi5vCvw7vddwTJXhqHLfw4Txmuv25L2M9oGeid_VTu2Cspe0hUiHakPLHq167cmb9_VSgBEdSkqg"
+}
 ```
-
-Then use it inside the **index.ts** file
-
-```js
-import bodyParser from 'body-parser';
-
-const app: Application = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-```
-
-And add another route to handle HTTP POST requests
-
-```js
-app.post('/post', async (req: Request, res: Response): Promise<Response> => {
-  console.log(req.body);
-  return res.status(200).send({
-    message: 'Hello World from post!',
-  });
-});
-```
-
-You will notice that inside the route handler we can get the body of the request by
-
-```js
-req.body;
-```
-
-It's possible because of the use of **body-parser**
-
-That's it! Hope you learned something new. 
+3. You are now free to consume the API! Make sure any requests to protected API endpoints either send the cookie with the provided `access_token` or send the `access_token` as a Bearaer token `Authorization` header.

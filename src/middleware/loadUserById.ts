@@ -9,9 +9,9 @@ export const loadUserById = async (req: RequestWithUser, res: Response, next: Ne
       req.user = user;
       next();
     } else {
-      return res.status(400).json({ error: `Error finding user with id ${id}` });
+      return res.status(404).json({ error: `Error finding user with id ${id}` });
     }
   } catch (error) {
-    return res.status(400).json({ error: `Error finding user with id ${id}` });
+    return res.status(404).json({ error: `Error finding user with id ${id}` });
   }
 };

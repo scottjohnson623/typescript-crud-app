@@ -50,7 +50,7 @@ export const updateUserHandler = async (req: RequestWithUser, res: Response, nex
     res.status(200).json({
       status: 'success',
       data: {
-        post: updatedUser,
+        user: updatedUser,
       },
     });
   } catch (err: any) {

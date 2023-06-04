@@ -1,0 +1,458 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Typescript CRUD App",
+      "description": "A crud app to create and modify users.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8000"
+      }
+    ],
+    "tags": [
+      {
+        "name": "user",
+        "description": "Operations about users"
+      }
+    ],
+    "paths": {
+      "/auth/register": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Create user",
+          "operationId": "createUserHandler",
+          "requestBody": {
+            "description": "Created user object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuccessfulUserResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Register Request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BadRegisterRequestResponse"
+                  }
+                }
+              }
+            },
+            "409": {
+              "$ref": "#/components/responses/DuplicateEmail"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Logs user into the system",
+          "description": "",
+          "operationId": "loginUserHandler",
+          "requestBody": {
+            "description": "LoginUserInput",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginUserInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SuccessfulLoginResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid username/password supplied",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UnsuccessfulLoginResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/logout": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Logs out current logged in user session",
+          "description": "",
+          "operationId": "logoutUserHandler",
+          "parameters": [],
+          "responses": {
+            "default": {
+              "description": "successful operation"
+            }
+          }
+        }
+      },
+      "/api/v1/users/{id}": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Get user by user id",
+          "description": "",
+          "operationId": "getUserByIdHandler",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The id that needs to be fetched.",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "401": {
+              "$ref": "#/components/responses/NotLoggedIn"
+            },
+            "404": {
+              "$ref": "#/components/responses/UserNotFound"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Update user",
+          "description": "Update a user model",
+          "operationId": "updateUserHandler",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "id that needs to be updated",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Update an existent user in the store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessfulUserResponse"
+                }
+              }
+            }
+          },
+          "responses": {
+            "401": {
+              "$ref": "#/components/responses/NotLoggedIn"
+            },
+            "404": {
+              "$ref": "#/components/responses/UserNotFound"
+            },
+            "409": {
+              "$ref": "#/components/responses/DuplicateEmail"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Delete user",
+          "operationId": "deleteUserHandler",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The name that needs to be deleted",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "User not logged in",
+              "$ref": "#/components/responses/NotLoggedIn"
+            },
+            "404": {
+              "description": "Invalid username supplied",
+              "$ref": "#/components/responses/UserNotFound"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "responses": {
+        "DuplicateEmail": {
+          "description": "Duplicate email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DuplicateEmailErrorResponse"
+              }
+            }
+          }
+        },
+        "NotLoggedIn": {
+          "description": "User is not logged in",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotLoggedInResponse"
+              }
+            }
+          }
+        },
+        "UserNotFound": {
+          "description": "The specified resource was not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserNotFoundResponse"
+              }
+            }
+          }
+        }
+      },
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "92fca89b-35b1-4e56-bf6a-2262b2909ca2"
+            },
+            "name": {
+              "type": "string",
+              "example": "theUser"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@email.com"
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2023-06-01T00:57:06.273Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2023-06-01T00:57:06.273Z"
+            }
+          }
+        },
+        "CreateUserInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "theUser"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "testtest"
+            }
+          }
+        },
+        "LoginUserInput": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "john@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "testtest"
+            }
+          }
+        },
+        "UpdateUserInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "theUser"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "testtest"
+            }
+          }
+        },
+        "SuccessfulLoginResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "success"
+            },
+            "access_token": {
+              "type": "string",
+              "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9"
+            }
+          }
+        },
+        "UnsuccessfulLoginResponse": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "example": "Invalid email or password"
+            }
+          }
+        },
+        "DuplicateEmailErrorResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "error"
+            },
+            "message": {
+              "type": "string",
+              "example": "User with that email already exists"
+            }
+          }
+        },
+        "SuccessfulUserResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "success"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "NotLoggedInResponse": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "example": "You are not logged in"
+            }
+          }
+        },
+        "UserNotFoundResponse": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "example": "Error finding user with id a25346a7-f750-49e2-8bc5-275b1c2dd7d6a"
+            }
+          }
+        },
+        "BadRegisterRequestResponse": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "example": "Fail"
+            },
+            "errors": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "example": "too_small"
+                },
+                "minimum": {
+                  "type": "number",
+                  "example": 8
+                },
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "inclusive": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "exact": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Password must be more than 8 characters"
+                },
+                "path": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": [
+                    "body",
+                    "password"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
