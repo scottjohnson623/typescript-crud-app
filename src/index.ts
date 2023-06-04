@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import apiRouter from './routes/api/api.routes';
 import authRouter from './routes/auth.routes';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../swagger.json'
+import swaggerDocument from '../swagger.json';
 
 AppDataSource.initialize().then(async () => {
   validateEnv();
