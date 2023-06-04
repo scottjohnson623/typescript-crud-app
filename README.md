@@ -2,6 +2,18 @@
 
 This is a sample project using node.js and express.js to have a simple CRUD backend for modifying resources.
 
+## Technologies Used
+
+- express
+- swagger
+- pg
+- zod
+- typeORM
+- bcryptjs / crypto
+- eslint 
+- prettier
+- envalid
+
 # Getting started
 
 ## Setup the Server
@@ -18,12 +30,12 @@ Next, rename the `.env.example` file to `.env`.
 Then, generate a new public and private key to update `JWT_ACCESS_TOKEN_PRIVATE_KEY` and `JWT_ACCESS_TOKEN_PUBLIC_KEY` ( You can do so at https://cryptotools.net/rsagen)
 
 If you have a postgres database instance already: 
-
+--------
 Update the .env variables to match the configuration of your postgres database
 
 If you don't:
-
-Install docker (if you haven't) and start the postgres database with `docker-compose up`, then run the necesssary database migrations with `npm run migrate`
+--------
+Install docker (if you haven't) and start the postgres database with `docker compose up`, then run the necesssary database migrations with `npm run migrate`
 
 Finally, start the server with `npm run dev`
 
