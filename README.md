@@ -80,4 +80,4 @@ Full API docs are created using swagger, and if your `NODE_ENV` environment vari
     "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWY2NzliNi1hNjJmLTQxNDQtODMxYi0xMzM1YzdkOGFjMWMiLCJpYXQiOjE2ODU4ODU0MDMsImV4cCI6MTY4NTg4OTAwM30.YdgoaCkKNPMi5vCvw7vddwTJXhqHLfw4Txmuv25L2M9oGeid_VTu2Cspe0hUiHakPLHq167cmb9_VSgBEdSkqg"
 }
 ```
-3. You are now free to consume the API! Make sure any requests to protected API endpoints either send the cookie with the provided `access_token` or send the `access_token` as a Bearaer token `Authorization` header.
+3. You are now free to consume the API! Make sure any requests to protected API endpoints either send the cookie with the provided `access_token` or send the `access_token` as a bearer token `Authorization` header.
