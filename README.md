@@ -29,14 +29,19 @@ Next, rename the `.env.example` file to `.env`.
 
 Then, generate a new public and private key to update `JWT_ACCESS_TOKEN_PRIVATE_KEY` and `JWT_ACCESS_TOKEN_PUBLIC_KEY` ( You can do so at https://cryptotools.net/rsagen)
 
+\
 If you have a postgres database instance already: 
 --------
+___
 Update the .env variables to match the configuration of your postgres database
 
 If you don't:
 --------
+___
 Install docker (if you haven't) and start the postgres database with `docker compose up`, then run the necesssary database migrations with `npm run migrate`
-
+___
+\
+\
 Finally, start the server with `npm run dev`
 
 You should see a message similar to 
